@@ -55,7 +55,7 @@ export const loginUser = async (req, res) => {
 
     res.cookie("token", token, {
       httpOnly: true,
-      maxAge: 2 * 24 * 60 * 60 * 1000,
+      maxAge: 350 * 24 * 60 * 60 * 1000,
       secure: process.env.NODE_ENV === "production",
     });
     console.log("cookie generated");
@@ -66,5 +66,14 @@ export const loginUser = async (req, res) => {
     res
       .status(500)
       .json({ success: false, error: error, message: "Something went wrong" });
+  }
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie("token");
+    return res.status(200).json({ success: true, message: "Logged out" });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error });
   }
 };

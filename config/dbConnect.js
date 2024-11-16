@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 const connectDB = async () => {
   mongoose
-    .connect(`mongodb://localhost:27017/snapbox`)
+    .connect(process.env.MONGO_URI)
     .then((res) => console.log(`MongoDB Connected: {conn.connection.host}`))
     .catch((err) => {
       console.log(err);

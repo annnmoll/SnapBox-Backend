@@ -2,17 +2,7 @@ import Frame from "../model/frameModel.js";
 
 export const createFrame = async (req, res) => {
   try {
-    const { name, width, height, price, numberOfImages, description } =
-      req.body;
-
-    const frame = new Frame({
-      name,
-      width,
-      height,
-      price,
-      numberOfImages,
-      description,
-    });
+    const frame = new Frame(req.body);
     await frame.save();
 
     return res.status(201).json({ success: true, frame });

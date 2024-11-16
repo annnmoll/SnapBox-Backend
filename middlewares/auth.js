@@ -15,3 +15,15 @@ export const isAuthenticated = (req, res, next) => {
     return res.status(500).json({ success: false, error: error });
   }
 };
+
+export const authorizeRole = (roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({
+        success: false,
+        message: "User is not authorized to access this route",
+      });
+    }
+    next();
+  };
+};
