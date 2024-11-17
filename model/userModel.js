@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 import bcrypt from "bcrypt";
 
 const userSchema = new Schema({
-  name: { type: String, required: true },
+  name: { type: String, required: true, unique: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
   role: {
@@ -12,6 +12,7 @@ const userSchema = new Schema({
     enum: ["user", "admin"],
     default: "user",
   },
+  loggedInAt: { type: Date },
 });
 
 //encrypt password before saving

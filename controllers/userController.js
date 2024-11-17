@@ -10,7 +10,7 @@ export const registerUser = async (req, res) => {
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
-    const isExist = await User.findOne({ email });
+    const isExist = await User.findOne({ name });
     console.log(isExist);
     if (isExist) {
       return res
@@ -19,6 +19,9 @@ export const registerUser = async (req, res) => {
     }
     const user = new User(req.body);
     await user.save();
+
+    //remove password from user object
+    user.password = undefined;
     res
       .status(201)
       .json({ success: true, message: "Registered Successfully", user });
@@ -29,13 +32,14 @@ export const registerUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    if (!email || !password) {
+    const { name, password } = req.body;
+
+    if (!name || !password) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
     }
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ name });
     if (!user) {
       return res
         .status(404)
@@ -47,8 +51,14 @@ export const loginUser = async (req, res) => {
         .status(401)
         .json({ success: false, message: "Invalid credentials" });
     }
+    //ren=move password from user object
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      { loggedInAt: new Date() },
+      { new: true }
+    ).select("-password");
     const token = jwt.sign(
-      { userId: user._id, email: user.email, role: user.role },
+      { userId: user._id, email: user.email, name: user.name, role: user.role },
       process.env.JWT_SECRET
     );
     console.log(token);
@@ -61,7 +71,7 @@ export const loginUser = async (req, res) => {
     console.log("cookie generated");
     return res
       .status(200)
-      .json({ success: true, message: "Login successful", user });
+      .json({ success: true, message: "Login successful", updatedUser });
   } catch (error) {
     res
       .status(500)
