@@ -61,17 +61,19 @@ export const loginUser = async (req, res) => {
       { userId: user._id, email: user.email, name: user.name, role: user.role },
       process.env.JWT_SECRET
     );
-    console.log(token);
 
     res.cookie("token", token, {
       httpOnly: true,
       maxAge: 350 * 24 * 60 * 60 * 1000,
       secure: process.env.NODE_ENV === "production",
     });
-    console.log("cookie generated");
-    return res
-      .status(200)
-      .json({ success: true, message: "Login successful", updatedUser, token });
+    return res.status(200).json({
+      success: true,
+      message: "Login successful",
+      updatedUser,
+      token,
+      isProd: process.env.NODE_ENV === "production",
+    });
   } catch (error) {
     res
       .status(500)
