@@ -71,7 +71,7 @@ export const loginUser = async (req, res) => {
     console.log("cookie generated");
     return res
       .status(200)
-      .json({ success: true, message: "Login successful", updatedUser });
+      .json({ success: true, message: "Login successful", updatedUser, token });
   } catch (error) {
     res
       .status(500)
