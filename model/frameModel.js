@@ -10,6 +10,9 @@ const frameSchema = new Schema({
   price: { type: Number, required: true },
   numberOfImages: { type: Number, required: true },
   description: { type: String },
+  frameImage: { type: String, required: true },
+  frameBackgrounds: [{ type: String, required: true }],
+  frameId: [{ type: Number, required: true }],
 });
 
 const frameModel = mongoose.model("Frame", frameSchema);
