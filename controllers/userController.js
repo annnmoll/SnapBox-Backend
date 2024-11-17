@@ -57,9 +57,13 @@ export const loginUser = async (req, res) => {
       { loggedInAt: new Date() },
       { new: true }
     ).select("-password");
+
+    //set expiration time in days for jwt token
+
     const token = jwt.sign(
       { userId: user._id, email: user.email, name: user.name, role: user.role },
-      process.env.JWT_SECRET
+      process.env.JWT_SECRET,
+      { expiresIn: "360d" }
     );
 
     res.cookie("token", token, {
