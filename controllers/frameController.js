@@ -32,13 +32,14 @@ export const getAllFrames = async (req, res) => {
 
 export const deleteFrame = async (req, res) => {
   try {
-    const frame = await Frame.findById(req.params.id);
-    if (!frame) {
+    const isExist = await Frame.findById(req.params.id);
+    if (!isExist) {
       return res
         .status(404)
         .json({ success: false, message: "Frame not found" });
     }
-    await frame.remove();
+    const frame = await Frame.findByIdAndDelete(req.params.id);
+
     return res
       .status(200)
       .json({ success: true, message: "Frame deleted successfully" });
